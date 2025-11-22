@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Kirim Email Gmail</title>
+</head>
+<body>
+  <h2>Kirim Email Via Gmail</h2>
+
+  <form id="mailForm" onsubmit="sendMail(event)">
+    <label>Nomor Anda:</label><br>
+    <input name="number" placeholder="+628xxxx" required><br><br>
+
+    <label>Masalah Anda:</label><br>
+    <textarea name="problem" rows="6" cols="40" placeholder="Tuliskan masalah Anda..." required></textarea><br><br>
+
+    <button type="submit">Kirim</button>
+  </form>
+
+  <script>
+    async function sendMail(e) {
+      e.preventDefault();
+
+      const form = new FormData(document.getElementById("mailForm"));
+      const json = Object.fromEntries(form.entries());
+
+      const sendButton = document.querySelector("button");
+      sendButton.disabled = true;
+      sendButton.innerText = "Mengirim...";
+
+      const response = await fetch("/api/sendMail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(json)
+      });
+
+      const result = await response.json();
+      alert(result.message);
+
+      sendButton.disabled = false;
+      sendButton.innerText = "Kirim";
+    }
+  </script>
+</body>
+</html>
